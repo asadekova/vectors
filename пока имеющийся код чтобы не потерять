@@ -1,7 +1,7 @@
-
- class Vector:
+class Vector:
     
     def __init__(self, *args): #инициализация класса, аргс - аргументы
+        assert all(type(arg) in (int, float) for arg in args) #учим программу ругаться, если мы вводим не int и float
         self.args = args #кроме того, мы можем "вытащить" i-тый аргумент: Vecor.args[i]; вывести кортеж с целиковым вектором: Vector.args
         self.args = list(self.args) #класс нам создал кортеж, а для удобства работы мы переводм его в изменяемый список
     
@@ -11,7 +11,7 @@
             res.append(self.args[i]*l)
         return Vector(*res).args
     
-    def addition(self,other): #сложение векторов
+    def __add__(self,other): #сложение векторов
         res = []
         if len(self.args) == len(other.args):
             for i in range(len(self.args)):
@@ -20,7 +20,7 @@
         else:
             return False
     
-    def scalar(self,other): #скалярное произведение двух векторов
+    def __mul__(self,other): #скалярное произведение двух векторов
         res = 0
         if len(self.args) == len(other.args):
             for i in range(len(self.args)):
@@ -30,19 +30,19 @@
             return False
     
     def module(self): #модуль вектора
-        return((self.scalar(self))**0.5)
+        return((self*self)**0.5)
         
     def angle(self,other): #косинус угла между двумя векторами
-        return((self.scalar(other))/((self.module())*(other.module())))
+        return((self*other)/((self.module())*(other.module())))
 
 
     
             
- a = Vector(1,1,2)
- b = Vector(2,1,1)
- print(a.args, b.args)
- print(a.addition(b), b.addition(a))
- print(a.multiply(3), b.multiply(2))
- print(a.module(), b.module())
- print(a.angle(b), b.angle(a))
- 
+a = Vector(1,1,2)
+b = Vector(2,2,1)
+print(a.args, b.args) 
+print(a+b, b+a)
+print(a.multiply(3))
+print(a*b, b*a)
+print(a.module(), b.module())
+print(a.angle(b))
