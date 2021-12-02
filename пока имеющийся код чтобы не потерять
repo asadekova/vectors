@@ -1,0 +1,28 @@
+  class Vector:
+      def __init__(self, *args): #инициализация класса, аргс - аргументы
+          self.args = args #кроме того, мы можем "вытащить" i-тый аргумент: Vecor.args[i]; вывести кортеж с целиковым вектором: Vector.args
+          self.args = list(self.args) #класс нам создал кортеж, а для удобства работы мы переводм его в изменяемый список
+    
+      def multiply(self,l): #умножение вектора на скаляр l
+          for i in range(len(self.args)):
+             self.args[i] = self.args[i]*l
+          return self.args
+    
+      def addition(self,other): #сложение векторов
+          if len(self.args) == len(other.args):
+              for i in range(len(self.args)):
+                  self.args[i] = self.args[i] + other.args[i]
+              return self.args
+         else:
+              return False
+    
+     def scalar(self,other): #скалярное произведение двух векторов
+          res = 0
+          if len(self.args) == len(other.args):
+              for i in range(len(self.args)):
+                  res = res + (self.args[i] * other.args[i])
+              return res
+          else:
+              return False
+              
+              
