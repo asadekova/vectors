@@ -29,4 +29,6 @@
       def module(self):
           return((self.scalar(self))**0.5)
        
-       
+      def angle(self,other): #косинус угла между двумя векторами
+          return((self.scalar(other))/((self.module())*(other.module())))
+          
