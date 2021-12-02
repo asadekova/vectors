@@ -5,12 +5,6 @@ class Vector:
         self.args = args #кроме того, мы можем "вытащить" i-тый аргумент: Vecor.args[i]; вывести кортеж с целиковым вектором: Vector.args
         self.args = list(self.args) #класс нам создал кортеж, а для удобства работы мы переводм его в изменяемый список
     
-    def multiply(self,l): #умножение вектора на скаляр l
-        res = []
-        for i in range(len(self.args)):
-            res.append(self.args[i]*l)
-        return Vector(*res).args
-    
     def __add__(self,other): #сложение векторов
         res = []
         if len(self.args) == len(other.args):
@@ -19,7 +13,23 @@ class Vector:
             return Vector((*res)).args
         else:
             return False
+        
+    def __sub__(self,other): #вычитание векторов
+        res = []
+        if len(self.args) == len(other.args):
+            for i in range(len(self.args)):
+                res.append(self.args[i] - other.args[i])
+            return Vector((*res)).args
+        else:
+            return False
     
+    def multiply(self,other): 
+        if other == type(int) or other == type(float): #умножение на скаляр
+            res = []
+            for i in range(len(self.args)):
+                res.append(self.args[i]*other)
+            return Vector(*res).args
+        
     def __mul__(self,other): #скалярное произведение двух векторов
         res = 0
         if len(self.args) == len(other.args):
@@ -29,20 +39,25 @@ class Vector:
         else:
             return False
     
-    def module(self): #модуль вектора
+    def __abs__(self): #модуль вектора
         return((self*self)**0.5)
         
     def angle(self,other): #косинус угла между двумя векторами
-        return((self*other)/((self.module())*(other.module())))
-
+        return((self*other)/((abs(self))*(abs(other))))
 
     
-            
-a = Vector(1,1,2)
-b = Vector(2,2,1)
-print(a.args, b.args) 
-print(a+b, b+a)
-print(a.multiply(3))
-print(a*b, b*a)
-print(a.module(), b.module())
-print(a.angle(b))
+    
+if __name__ == '__main__': #код теста
+    a = Vector(1,1,2,4)
+    b = Vector(2,2,1,3)
+    c = Vector(1,1,2)
+    print('a, b, c:', a.args, b.args, c.args) 
+    print('addition commutativity test, a+b=b+a:', a+b, b+a)
+    print('addition length equality test a+c=False:', a+c)
+    print('subtraction test, a-b, b-a:', a-b, b-a)
+    print('subtraction length equality test a-c=False:', a-c)
+    print('multiplication by number commutativity test, a*3=3*a:')
+    print('scalar multiplication commutativity test, a*b=b*a:', a*b, b*a)
+    print('scalar multiplication length equality test a*c=False:', a*c)
+    print('module test:', abs(a), abs(b), abs(c))
+    print('angle test, a^b=b^a:', a.angle(b), b.angle(a))
