@@ -1,9 +1,9 @@
 
 class Vector:
     
-    def __init__(self, *args): #инициализация класса, аргс - аргументы
+    def __init__(self, *args): #инициализация класса
         assert all(type(arg) in (int, float) for arg in args) #учим программу ругаться, если мы вводим не int и float
-        self.args = args #кроме того, мы можем "вытащить" i-тый аргумент: Vecor.args[i]; вывести кортеж с целиковым вектором: Vector.args
+        self.args = args 
         self.args = list(self.args) #класс нам создал кортеж, а для удобства работы мы переводм его в изменяемый список
     
     def __add__(self,other): #сложение векторов
@@ -25,7 +25,7 @@ class Vector:
             return False
     
     def __mul__(self,other): #скалярное произведение двух векторов
-        if isinstance(other, Vector) and isinstance(self, Vector):
+        if isinstance(other, Vector):
             res = 0
             if len(self.args) == len(other.args):
                 for i in range(len(self.args)):
@@ -33,14 +33,14 @@ class Vector:
                 return res
             else:
                 return False
-        elif isinstance(self, Vector) and (isinstance(other, int) or isinstance(other, float)):
+        elif (isinstance(other, int) or isinstance(other, float)): #умножение на число
             res = []
             for i in range(len(self.args)):
                 res.append(self.args[i]*other)
             return Vector(*res)
         
-    def __rmul__(self,other):
-        if isinstance(self, Vector) and (isinstance(other, int) or isinstance(other, float)):
+    def __rmul__(self,other): #говорим, что у нас * коммутативная (необходимо только если операция * не определена для одного из классов)
+        if (isinstance(other, int) or isinstance(other, float)):
             res = []
             for i in range(len(self.args)):
                 res.append(self.args[i]*other)
@@ -51,21 +51,27 @@ class Vector:
         
     def angle(self,other): #косинус угла между двумя векторами
         return((self*other)/((abs(self))*(abs(other))))
+    
+    def __str__(self): #вывод в формате строки
+        return str(self.args)
+    
+    def __repr__(self): #
+        return repr(self.args)
 
     
     
 if __name__ == '__main__': #код теста
-    a = Vector(1,1,2,4)
-    b = Vector(2,2,1,3)
+    a = Vector(1,1,2,4,4,5,6)
+    b = Vector(2,2,1,3,3,8,1)
     c = Vector(1,1,2)
     
-    print('a, b, c:', a.args, b.args, c.args) 
-    print('addition commutativity test, a+b=b+a:', (a+b).args, (b+a).args)
+    print('a, b, c:', repr(a), repr(b), repr(c)) 
+    print('addition commutativity test, a+b=b+a:', repr(a+b), repr(b+a))
     print('addition length equality test a+c=False:', a+c)
-    print('subtraction test, a-b, b-a:', (a-b).args, (b-a).args)
+    print('subtraction test, a-b, b-a:', repr(a-b), repr(b-a))
     print('subtraction length equality test a-c=False:', a-c)
     print('scalar multiplication commutativity test, a*b=b*a:', a*b, b*a)
     print('scalar multiplication length equality test a*c=False:', a*c)
-    print('multiplication by number commutativity test, a*3=3*a:', (a*3).args, (3*a).args)
+    print('multiplication by number commutativity test, a*3=3*a:', repr(a*3), repr(3*a))
     print('module test:', abs(a), abs(b), abs(c))
     print('angle test, a^b=b^a:', a.angle(b), b.angle(a))
