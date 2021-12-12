@@ -1,10 +1,32 @@
+import time
 
 class Vector:
+    
+ 
+    def timeit(method): #я не придумала какой декоратор можно сделать поэтому пусть будет такой. его можно применить к любому методу, но я ограничилась одним
+        def timed(*args, **kw):
+            ts = time.time()
+            result = method(*args, **kw)
+            te = time.time()
+            delta = (te - ts) * 1000
+            print(f'{method.__name__} выполнялся {delta:2.2f} ms')
+            return result
+        return timed
+       
     
     def __init__(self, *args): #инициализация класса
         assert all(type(arg) in (int, float) for arg in args) #учим программу ругаться, если мы вводим не int и float
         self.args = args 
         self.args = list(self.args) #класс нам создал кортеж, а для удобства работы мы переводм его в изменяемый список
+    
+   
+    @timeit 
+    def __eq__(self, other): #равенство векторов
+        if self.args == other.args:
+            return True
+        else:
+            return False
+    
     
     def __add__(self,other): #сложение векторов
         res = []
@@ -23,7 +45,8 @@ class Vector:
             return Vector((*res))
         else:
             return False
-    
+        
+
     def __mul__(self,other): #скалярное произведение двух векторов
         if isinstance(other, Vector):
             res = 0
@@ -46,16 +69,27 @@ class Vector:
                 res.append(self.args[i]*other)
             return Vector(*res)
     
+    
     def __abs__(self): #модуль вектора
         return((self*self)**0.5)
-        
+          
     def angle(self,other): #косинус угла между двумя векторами
         return((self*other)/((abs(self))*(abs(other))))
+    
+    
+    @classmethod #а это сойдёт за декоратор?)
+    def __from_string__(cls, string): #чтобы можно было читать как вектор строку 1, 2, 4
+        read = []
+        for elem in string.split(', '):
+             read.append(int(elem))
+        return Vector(*read)
+        
+        
     
     def __str__(self): #вывод в формате строки
         return str(self.args)
     
-    def __repr__(self): #
+    def __repr__(self):
         return repr(self.args)
 
     
@@ -75,3 +109,4 @@ if __name__ == '__main__': #код теста
     print('multiplication by number commutativity test, a*3=3*a:', repr(a*3), repr(3*a))
     print('module test:', abs(a), abs(b), abs(c))
     print('angle test, a^b=b^a:', a.angle(b), b.angle(a))
+    assert Vector.__from_string__("3, 45, 5") == Vector(3, 45, 5)
